@@ -3,7 +3,7 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/pdh9523/gin-practice/internal/db"
-	"github.com/pdh9523/gin-practice/internal/model"
+	"github.com/pdh9523/gin-practice/internal/domain/post/model"
 	"net/http"
 )
 
