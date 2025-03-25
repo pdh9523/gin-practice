@@ -7,15 +7,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type UserService struct {
+type UserServiceImpl struct {
 	Repo repository.UserRepository
 }
 
-func NewUserService(repo repository.UserRepository) *UserService {
-	return &UserService{Repo: repo}
+func NewUserService(repo repository.UserRepository) UserService {
+	return &UserServiceImpl{Repo: repo}
 }
 
-func (s *UserService) RegisterUser(userRequestDto dto.UserRequestDto) (*model.User, error) {
+func (s *UserServiceImpl) RegisterUser(userRequestDto dto.UserRequestDto) (*model.User, error) {
 	user := dto.ToUser(userRequestDto)
 
 	hashed, err := bcrypt.GenerateFromPassword([]byte(userRequestDto.Password), bcrypt.DefaultCost)
@@ -31,7 +31,7 @@ func (s *UserService) RegisterUser(userRequestDto dto.UserRequestDto) (*model.Us
 	return user, nil
 }
 
-func (s *UserService) LoginUser(userLoginDto dto.UserLoginDto) (*model.User, error) {
+func (s *UserServiceImpl) LoginUser(userLoginDto dto.UserLoginDto) (*model.User, error) {
 	user, err := s.Repo.FindByEmail(userLoginDto.Email)
 	if err != nil {
 		return nil, err
