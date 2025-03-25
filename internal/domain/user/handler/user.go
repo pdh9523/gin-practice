@@ -42,6 +42,6 @@ func (h *UserHandler) LoginUser(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
-	c.JSON(http.StatusOK, gin.H{"user": dto.NewUserResponseDto(user)})
+	c.JSON(http.StatusOK, dto.NewUserResponseDto(user))
 
 }

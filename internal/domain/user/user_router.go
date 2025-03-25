@@ -6,9 +6,9 @@ import (
 )
 
 func MountUserRoutes(r *gin.Engine, handler *handler.UserHandler) {
-	r.Group("/user")
+	route := r.Group("/user")
 	{
-		r.POST("/login", handler.LoginUser)
-		r.POST("/register", handler.RegisterUser)
+		route.POST("/login", handler.LoginUser)
+		route.POST("/register", handler.RegisterUser)
 	}
 }
