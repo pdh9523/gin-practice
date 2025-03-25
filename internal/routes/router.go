@@ -4,7 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pdh9523/gin-practice/internal/db"
 	"github.com/pdh9523/gin-practice/internal/domain/post"
+	ph "github.com/pdh9523/gin-practice/internal/domain/post/handler"
 	postModel "github.com/pdh9523/gin-practice/internal/domain/post/model"
+	pr "github.com/pdh9523/gin-practice/internal/domain/post/repository"
+	ps "github.com/pdh9523/gin-practice/internal/domain/post/service"
 	"github.com/pdh9523/gin-practice/internal/domain/user"
 	uh "github.com/pdh9523/gin-practice/internal/domain/user/handler"
 	userModel "github.com/pdh9523/gin-practice/internal/domain/user/model"
@@ -25,6 +28,9 @@ func SetupRouter() *gin.Engine {
 	userHandler := uh.NewUserHandler(userService)
 	user.MountUserRoutes(r, userHandler)
 
-	post.MountPostRoutes(r)
+	postRepository := pr.NewGormPostRepository(db.DB)
+	postService := ps.NewPostService(postRepository)
+	postHandler := ph.NewPostHandler(postService)
+	post.MountPostRoutes(r, postHandler)
 	return r
 }
