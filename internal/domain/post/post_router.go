@@ -6,6 +6,7 @@ import (
 	"github.com/pdh9523/gin-practice/internal/domain/post/handler"
 	"github.com/pdh9523/gin-practice/internal/domain/post/repository"
 	"github.com/pdh9523/gin-practice/internal/domain/post/service"
+	"github.com/pdh9523/gin-practice/internal/middleware"
 )
 
 func MountPostRoutes(r *gin.Engine) {
@@ -18,8 +19,14 @@ func MountPostRoutes(r *gin.Engine) {
 	{
 		post.GET("", postHandler.GetPosts)
 		post.GET("/:id", postHandler.GetPostByID)
-		post.POST("", postHandler.CreatePost)
-		post.DELETE("/:id", postHandler.DeletePost)
-		post.PATCH("/:id", postHandler.UpdatePost)
+
+	}
+
+	postWithAuth := r.Group("/posts")
+	postWithAuth.Use(middleware.AuthMiddleware())
+	{
+		postWithAuth.POST("", postHandler.CreatePost)
+		postWithAuth.PATCH("/:id", postHandler.UpdatePost)
+		postWithAuth.DELETE("/:id", postHandler.DeletePost)
 	}
 }

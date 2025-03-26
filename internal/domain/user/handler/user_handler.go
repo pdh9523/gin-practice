@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pdh9523/gin-practice/internal/domain/user/dto"
 	"github.com/pdh9523/gin-practice/internal/domain/user/service"
+	"github.com/pdh9523/gin-practice/pkg/jwt"
 	"net/http"
 )
 
@@ -42,6 +43,9 @@ func (h *UserHandler) LoginUser(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
-	c.JSON(http.StatusOK, dto.NewUserResponseDto(user))
+
+	accessToken, _ := jwt.GenerateAccessToken(user.ID)
+	refreshToken, _ := jwt.GenerateRefreshToken(user.ID)
+	c.JSON(http.StatusOK, dto.NewTokenResponseDto(accessToken, refreshToken))
 
 }

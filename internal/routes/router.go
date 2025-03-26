@@ -16,7 +16,7 @@ func SetupRouter() *gin.Engine {
 
 	r := gin.Default()
 	r.Group("/api/v1/")
-	
+
 	user.MountUserRoutes(r)
 	post.MountPostRoutes(r)
 
