@@ -2,10 +2,10 @@ package post
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/pdh9523/gin-practice/internal/db"
 	"github.com/pdh9523/gin-practice/internal/domain/post/handler"
 	"github.com/pdh9523/gin-practice/internal/domain/post/repository"
 	"github.com/pdh9523/gin-practice/internal/domain/post/service"
+	"github.com/pdh9523/gin-practice/internal/infra/db"
 	"github.com/pdh9523/gin-practice/internal/middleware"
 )
 

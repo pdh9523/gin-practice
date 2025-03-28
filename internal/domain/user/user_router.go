@@ -2,10 +2,10 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/pdh9523/gin-practice/internal/db"
 	"github.com/pdh9523/gin-practice/internal/domain/user/handler"
 	"github.com/pdh9523/gin-practice/internal/domain/user/repository"
 	"github.com/pdh9523/gin-practice/internal/domain/user/service"
+	"github.com/pdh9523/gin-practice/internal/infra/db"
 )
 
 func MountUserRoutes(r *gin.Engine) {
