@@ -8,10 +8,10 @@ import (
 )
 
 var accessSecret = []byte(os.Getenv("ACCESS_TOKEN_SECRET"))
-var accessTokenExpireTime = 1 * time.Hour // 1시간
+var AccessTokenExpireTime = 1 * time.Hour // 1시간
 
 var refreshSecret = []byte(os.Getenv("REFRESH_TOKEN_SECRET"))
-var refreshTokenExpireTime = 15 * 24 * time.Hour // 15일
+var RefreshTokenExpireTime = 15 * 24 * time.Hour // 15일
 
 func GenerateToken(userID uint, tokenSecret []byte, expireTime time.Duration) (string, error) {
 	claims := jwt.MapClaims{
@@ -23,11 +23,11 @@ func GenerateToken(userID uint, tokenSecret []byte, expireTime time.Duration) (s
 }
 
 func GenerateAccessToken(userID uint) (string, error) {
-	return GenerateToken(userID, accessSecret, accessTokenExpireTime)
+	return GenerateToken(userID, accessSecret, AccessTokenExpireTime)
 }
 
 func GenerateRefreshToken(userID uint) (string, error) {
-	return GenerateToken(userID, refreshSecret, refreshTokenExpireTime)
+	return GenerateToken(userID, refreshSecret, RefreshTokenExpireTime)
 }
 
 func ParseToken(tokenString string, tokenSecret []byte) (uint, error) {
