@@ -1,0 +1,13 @@
+services:
+  mysql:
+    image: mysql:8.4.3
+    container_name: gin-practice-db
+    volumes:
+      - gin_practice_data:/var/lib/mysql
+    env_file:
+      - .env
+    ports:
+      - "${MYSQL_PORT}:3306"
+
+volumes:
+    gin_practice_data:
