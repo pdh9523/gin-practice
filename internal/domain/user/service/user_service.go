@@ -7,5 +7,4 @@ import (
 
 type UserService interface {
 	RegisterUser(userRequestDto dto.UserRequestDto) (*model.User, error)
-	LoginUser(userLoginDto dto.UserLoginDto) (*model.User, error)
 }

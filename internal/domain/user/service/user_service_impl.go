@@ -30,15 +30,3 @@ func (s *UserServiceImpl) RegisterUser(userRequestDto dto.UserRequestDto) (*mode
 
 	return user, nil
 }
-
-func (s *UserServiceImpl) LoginUser(userLoginDto dto.UserLoginDto) (*model.User, error) {
-	user, err := s.Repo.FindByEmail(userLoginDto.Email)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userLoginDto.Password)); err != nil {
-		return nil, err
-	}
-	return user, nil
-}

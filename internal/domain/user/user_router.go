@@ -16,7 +16,6 @@ func MountUserRoutes(r *gin.Engine) {
 
 	route := r.Group("/user")
 	{
-		route.POST("/login", userHandler.LoginUser)
 		route.POST("/register", userHandler.RegisterUser)
 	}
 }

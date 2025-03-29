@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/pdh9523/gin-practice/internal/domain/auth"
 	"github.com/pdh9523/gin-practice/internal/domain/post"
 	postModel "github.com/pdh9523/gin-practice/internal/domain/post/model"
 	"github.com/pdh9523/gin-practice/internal/domain/user"
@@ -19,6 +20,7 @@ func SetupRouter() *gin.Engine {
 
 	user.MountUserRoutes(r)
 	post.MountPostRoutes(r)
+	auth.MountAuthRoutes(r)
 
 	return r
 }

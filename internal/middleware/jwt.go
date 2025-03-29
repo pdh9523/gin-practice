@@ -16,13 +16,13 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		tokenStr := strings.TrimPrefix(auth, "Bearer ")
-		userId, err := jwt.ParseAccessToken(tokenStr)
+		claims, err := jwt.ParseAccessToken(tokenStr)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "유효하지 않은 토큰입니다."})
 			return
 		}
 
-		c.Set("userId", userId)
+		c.Set("auth", claims)
 		c.Next()
 	}
 }

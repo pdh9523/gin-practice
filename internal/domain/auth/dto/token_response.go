@@ -7,7 +7,7 @@ type TokenResponseDto struct {
 
 func NewTokenResponseDto(accessToken, refreshToken string) *TokenResponseDto {
 	return &TokenResponseDto{
-		accessToken,
-		refreshToken,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
 	}
 }
