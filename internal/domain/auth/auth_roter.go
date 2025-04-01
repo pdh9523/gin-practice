@@ -8,14 +8,24 @@ import (
 	userRepository "github.com/pdh9523/gin-practice/internal/domain/user/repository"
 	"github.com/pdh9523/gin-practice/internal/infra/cache"
 	"github.com/pdh9523/gin-practice/internal/infra/db"
+	"github.com/pdh9523/gin-practice/internal/infra/email"
 	"github.com/pdh9523/gin-practice/internal/middleware"
+	"os"
 )
 
 func MountAuthRoutes(r *gin.Engine, c cache.GlobalCacheStore) {
 
 	userRepo := userRepository.NewGormUserRepository(db.DB)
-	tokenStore := repository.NewRefreshTokenStore(c)
-	authService := service.NewAuthService(userRepo, tokenStore)
+	refreshTokenStore := repository.NewRefreshTokenStore(c)
+	verifyTokenStore := repository.NewVerifyTokenStore(c)
+	emailSender := email.NewGoEmailSender(
+		os.Getenv("EMAIL_FROM"),
+		os.Getenv("EMAIL_HOST"),
+		os.Getenv("EMAIL_USERNAME"),
+		os.Getenv("EMAIL_PASSWORD"),
+		587,
+	)
+	authService := service.NewAuthService(userRepo, refreshTokenStore, verifyTokenStore, emailSender)
 	authHandler := handler.NewAuthHandler(authService)
 
 	routeWithAuth := r.Group("/auth")
