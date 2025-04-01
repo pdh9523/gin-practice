@@ -7,51 +7,51 @@ import (
 )
 
 type memoryEntry struct {
-	token     string
+	value     string
 	expiresAt time.Time
 }
 
 type MemoryTokenStore struct {
-	data map[uint]memoryEntry
+	data map[string]memoryEntry
 	mu   sync.RWMutex
 }
 
-func NewMemoryTokenStore() RefreshTokenStore {
+func NewMemoryTokenStore() GlobalCacheStore {
 	return &MemoryTokenStore{
-		data: make(map[uint]memoryEntry),
+		data: make(map[string]memoryEntry),
 	}
 }
 
-func (m *MemoryTokenStore) Save(userID uint, token string, ttl time.Duration) error {
+func (m *MemoryTokenStore) Save(key, value string, ttl time.Duration) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	m.data[userID] = memoryEntry{
-		token:     token,
+	m.data[key] = memoryEntry{
+		value:     value,
 		expiresAt: time.Now().Add(ttl),
 	}
 	return nil
 }
 
-func (m *MemoryTokenStore) Find(userID uint) (string, error) {
+func (m *MemoryTokenStore) Find(key string) (string, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	entry, ok := m.data[userID]
+	entry, ok := m.data[key]
 	if !ok {
-		return "", errors.New("token not found")
+		return "", errors.New("cache not found")
 	}
 
 	if time.Now().After(entry.expiresAt) {
-		return "", errors.New("token expired")
+		return "", errors.New("cache expired")
 	}
-	return entry.token, nil
+	return entry.value, nil
 }
 
-func (m *MemoryTokenStore) Delete(userID uint) error {
+func (m *MemoryTokenStore) Delete(key string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	delete(m.data, userID)
+	delete(m.data, key)
 	return nil
 }

@@ -4,18 +4,18 @@ import (
 	"crypto/subtle"
 	"errors"
 	"github.com/pdh9523/gin-practice/internal/domain/auth/dto"
-	"github.com/pdh9523/gin-practice/internal/domain/user/repository"
-	"github.com/pdh9523/gin-practice/internal/infra/cache"
+	authRepository "github.com/pdh9523/gin-practice/internal/domain/auth/repository"
+	userRepository "github.com/pdh9523/gin-practice/internal/domain/user/repository"
 	"github.com/pdh9523/gin-practice/pkg/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthServiceImpl struct {
-	UserRepo   repository.UserRepository
-	TokenStore cache.RefreshTokenStore
+	UserRepo   userRepository.UserRepository
+	TokenStore authRepository.RefreshTokenStore
 }
 
-func NewAuthService(userRepo repository.UserRepository, tokenStore cache.RefreshTokenStore) AuthService {
+func NewAuthService(userRepo userRepository.UserRepository, tokenStore authRepository.RefreshTokenStore) AuthService {
 	return &AuthServiceImpl{
 		UserRepo:   userRepo,
 		TokenStore: tokenStore,
@@ -49,7 +49,7 @@ func (s *AuthServiceImpl) Logout(userID uint) error {
 }
 
 func (s *AuthServiceImpl) TokenRefresh(userID uint, refreshToken string) (*dto.TokenResponseDto, error) {
-	cachedToken, err := s.TokenStore.Find(userID)
+	cachedToken, err := s.TokenStore.FindByID(userID)
 
 	if err != nil {
 		// 토큰을 못찾은 경우

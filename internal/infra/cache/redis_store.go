@@ -3,7 +3,6 @@ package cache
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/redis/go-redis/v9"
 	"time"
 )
@@ -13,7 +12,7 @@ type RedisTokenStore struct {
 	ctx    context.Context
 }
 
-func NewRedisTokenStore(addr string, password string, db int) RefreshTokenStore {
+func NewRedisTokenStore(addr string, password string, db int) GlobalCacheStore {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: password,
@@ -26,22 +25,18 @@ func NewRedisTokenStore(addr string, password string, db int) RefreshTokenStore 
 	}
 }
 
-func (r *RedisTokenStore) key(userID uint) string {
-	return fmt.Sprintf("refresh_token:%d", userID)
+func (r *RedisTokenStore) Save(key, value string, ttl time.Duration) error {
+	return r.client.Set(r.ctx, key, value, ttl).Err()
 }
 
-func (r *RedisTokenStore) Save(userID uint, token string, ttl time.Duration) error {
-	return r.client.Set(r.ctx, r.key(userID), token, ttl).Err()
-}
-
-func (r *RedisTokenStore) Find(userID uint) (string, error) {
-	val, err := r.client.Get(r.ctx, r.key(userID)).Result()
+func (r *RedisTokenStore) Find(key string) (string, error) {
+	val, err := r.client.Get(r.ctx, key).Result()
 	if errors.Is(err, redis.Nil) {
 		return "", errors.New("token not found")
 	}
 	return val, err
 }
 
-func (r *RedisTokenStore) Delete(userID uint) error {
-	return r.client.Del(r.ctx, r.key(userID)).Err()
+func (r *RedisTokenStore) Delete(key string) error {
+	return r.client.Del(r.ctx, key).Err()
 }
